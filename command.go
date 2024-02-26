@@ -338,9 +338,7 @@ func (cmd *Command) prepare(clr color.Color, args []string, writer io.Writer, re
 	for _, argv := range argvList {
 		if argv != nil {
 			if helper, ok := argv.(AutoHelper); ok && helper.AutoHelp() {
-				if !ctx.command.Hidden {
-					ctx.WriteUsage()
-				}
+				ctx.WriteUsage()
 				err = ExitError
 				return
 			}
