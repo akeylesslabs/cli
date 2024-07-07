@@ -2,6 +2,7 @@ package cli
 
 import (
 	"reflect"
+	"strconv"
 	"strings"
 )
 
@@ -10,12 +11,13 @@ const (
 	tagPw   = "pw" // password
 	tagEdit = "edit"
 
-	tagUsage  = "usage"
-	tagDefaut = "dft"
-	tagName   = "name"
-	tagPrompt = "prompt"
-	tagParser = "parser"
-	tagSep    = "sep" // used to seperate key/value pair of map, default is `=`
+	tagUsage        = "usage"
+	tagDefaut       = "dft"
+	tagDefautInject = "injectDft"
+	tagName         = "name"
+	tagPrompt       = "prompt"
+	tagParser       = "parser"
+	tagSep          = "sep" // used to seperate key/value pair of map, default is `=`
 
 	dashOne = "-"
 	dashTwo = "--"
@@ -41,6 +43,7 @@ type tagProperty struct {
 
 	usage         string            `usage:"usage string"`
 	dft           string            `dft:"default value or expression"`
+	injectDft     bool              `injectDft:"true/false, by default true"`
 	name          string            `name:"tag reference name"`
 	prompt        string            `prompt:"prompt string"`
 	sep           string            `sep:"string for seperate kay/value pair of map"`
@@ -96,6 +99,13 @@ func parseTag(fieldName string, structTag reflect.StructTag) (p *tagProperty, is
 
 	// `dft` TAG
 	p.dft = tag.Get(tagDefaut)
+
+	// `injectDft` TAG
+	toInject, parseErr := strconv.ParseBool(tag.Get(tagDefautInject))
+	if parseErr != nil{
+		toInject = true
+	}
+	p.injectDft = toInject
 
 	// `name` TAG
 	p.name = tag.Get(tagName)
