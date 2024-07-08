@@ -9,16 +9,18 @@ import (
 
 func TestTag(t *testing.T) {
 	type argT struct {
-		Cli            string `cli:"cli"`
-		Pw             string `pw:"pw"`
-		Edit           string `edit:"edit"`
-		Usage          string `cli:"usage" usage:"hello,usage"`
-		Dft            string `cli:"dft" dft:"hello,dft"`
-		Name           string `cli:"name" name:"hello-name"`
-		Prompt         string `cli:"prompt" prompt:"hello,prompt"`
-		Parser         string `cli:"parser" parser:"json"`
-		Sep            string `cli:"sep" sep:":"`
-		Multi          string `cli:"multi"  usage:"multi usage" dft:"dft-value"`
+		Cli    string `cli:"cli"`
+		Pw     string `pw:"pw"`
+		Edit   string `edit:"edit"`
+		Usage  string `cli:"usage" usage:"hello,usage"`
+		Dft    string `cli:"dft" dft:"hello,dft"`
+		Name   string `cli:"name" name:"hello-name"`
+		Prompt string `cli:"prompt" prompt:"hello,prompt"`
+		Parser string `cli:"parser" parser:"json"`
+		Sep    string `cli:"sep" sep:":"`
+		Multi  string `cli:"multi"  
+						usage:"multi usage" 
+						dft:"dft-value"`
 		StillPrintsDft string `cli:"stillDft"  usage:"multi usage" dft:"dft-value" injectDft:"false"`
 
 		Required     string `cli:"*r"`
