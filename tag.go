@@ -13,7 +13,7 @@ const (
 
 	tagUsage        = "usage"
 	tagDefaut       = "dft"
-	tagDefautInject = "injectDft"
+	tagDefautInject = "ignoreDft"
 	tagName         = "name"
 	tagPrompt       = "prompt"
 	tagParser       = "parser"
@@ -43,7 +43,7 @@ type tagProperty struct {
 
 	usage         string            `usage:"usage string"`
 	dft           string            `dft:"default value or expression"`
-	injectDft     bool              `injectDft:"true/false, by default true"`
+	ignoreDft     bool              `ignoreDft:"true/false, by default true"`
 	name          string            `name:"tag reference name"`
 	prompt        string            `prompt:"prompt string"`
 	sep           string            `sep:"string for seperate kay/value pair of map"`
@@ -100,12 +100,9 @@ func parseTag(fieldName string, structTag reflect.StructTag) (p *tagProperty, is
 	// `dft` TAG
 	p.dft = tag.Get(tagDefaut)
 
-	// `injectDft` TAG
-	toInject, parseErr := strconv.ParseBool(tag.Get(tagDefautInject))
-	if parseErr != nil{
-		toInject = true
-	}
-	p.injectDft = toInject
+	// `ignoreDft` TAG
+	toIgnore, _ := strconv.ParseBool(tag.Get(tagDefautInject))
+	p.ignoreDft = toIgnore
 
 	// `name` TAG
 	p.name = tag.Get(tagName)

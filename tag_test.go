@@ -21,7 +21,7 @@ func TestTag(t *testing.T) {
 		Multi  string `cli:"multi"  
 						usage:"multi usage" 
 						dft:"dft-value"`
-		StillPrintsDft string `cli:"stillDft"  usage:"multi usage" dft:"dft-value" injectDft:"false"`
+		StillPrintsDft string `cli:"stillDft"  usage:"multi usage" dft:"dft-value" ignoreDft:"false"`
 
 		Required     string `cli:"*r"`
 		Force        string `cli:"!f"`

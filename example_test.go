@@ -65,16 +65,16 @@ func ExampleParse_defaultValue() {
 		DevDir string `cli:"dir" usage:"develope directory" dft:"$CLI_TEST_DEV_PARENT_DIR/dev"`
 	}
 	type argT5 struct {
-		Port int `cli:"p,port" usage:"listening port" dft:"1" injectDft:"false"`
+		Port int `cli:"p,port" usage:"listening port" dft:"1" ignoreDft:"true"`
 	}
 	type argT6 struct {
-		Port int `cli:"p,port" usage:"listening port" dft:"1" injectDft:"true"`
+		Port int `cli:"p,port" usage:"listening port" dft:"1" ignoreDft:""`
 	}
 	type argT7 struct {
-		Port int `cli:"p,port" usage:"listening port" dft:"1" injectDft:""`
+		Port int `cli:"p,port" usage:"listening port" dft:"1" ignoreDft:""`
 	}
 	type argT8 struct {
-		Port int `cli:"p,port" usage:"listening port" dft:"1" injectDft:"not a bool"`
+		Port int `cli:"p,port" usage:"listening port" dft:"1" ignoreDft:"not a bool"`
 	}
 
 	os.Setenv("CLI_TEST_DEV_PARENT_DIR", "/home")
