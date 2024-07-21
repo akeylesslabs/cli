@@ -64,6 +64,18 @@ func ExampleParse_defaultValue() {
 	type argT4 struct {
 		DevDir string `cli:"dir" usage:"develope directory" dft:"$CLI_TEST_DEV_PARENT_DIR/dev"`
 	}
+	type argT5 struct {
+		Port int `cli:"p,port" usage:"listening port" dft:"1" ignoreDft:"true"`
+	}
+	type argT6 struct {
+		Port int `cli:"p,port" usage:"listening port" dft:"1" ignoreDft:""`
+	}
+	type argT7 struct {
+		Port int `cli:"p,port" usage:"listening port" dft:"1" ignoreDft:""`
+	}
+	type argT8 struct {
+		Port int `cli:"p,port" usage:"listening port" dft:"1" ignoreDft:"not a bool"`
+	}
 
 	os.Setenv("CLI_TEST_DEV_PARENT_DIR", "/home")
 	os.Setenv("CLI_TEST_HTTP_PORT", "8000")
@@ -77,6 +89,10 @@ func ExampleParse_defaultValue() {
 		{new(argT3), []string{"app"}},
 		{new(argT4), []string{"app"}},
 		{new(argT4), []string{"app", "--dir=/dev"}},
+		{new(argT5), []string{"app"}},
+		{new(argT6), []string{"app"}},
+		{new(argT7), []string{"app"}},
+		{new(argT8), []string{"app"}},
 	} {
 		cli.RunWithArgs(tt.argv, tt.args, func(ctx *cli.Context) error {
 			ctx.String("argv=%v\n", ctx.Argv())
@@ -89,6 +105,10 @@ func ExampleParse_defaultValue() {
 	// argv=&{8800}
 	// argv=&{/home/dev}
 	// argv=&{/dev}
+	// argv=&{0}
+	// argv=&{1}
+	// argv=&{1}
+	// argv=&{1}
 }
 
 // This example demonstrates to use Slice and Map

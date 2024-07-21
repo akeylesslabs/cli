@@ -18,9 +18,10 @@ func TestTag(t *testing.T) {
 		Prompt string `cli:"prompt" prompt:"hello,prompt"`
 		Parser string `cli:"parser" parser:"json"`
 		Sep    string `cli:"sep" sep:":"`
-		Multi  string `cli:"multi" 
-			usage:"multi usage"
-			dft:"dft-value"`
+		Multi  string `cli:"multi"  
+						usage:"multi usage" 
+						dft:"dft-value"`
+		StillPrintsDft string `cli:"stillDft"  usage:"multi usage" dft:"dft-value" ignoreDft:"false"`
 
 		Required     string `cli:"*r"`
 		Force        string `cli:"!f"`
@@ -132,7 +133,7 @@ func TestTag(t *testing.T) {
 			assert.False(t, tag.isEdit)
 			assert.Equal(t, tag.shortNames, []string{"-x", "-y", "-z"})
 			assert.Equal(t, tag.longNames, []string{"--xy", "--yz", "--xyz"})
-		case "Multi":
+		case "Multi", "StillPrintsDft":
 			assert.Equal(t, tag.usage, "multi usage")
 			assert.Equal(t, tag.dft, "dft-value")
 		case "Empty":

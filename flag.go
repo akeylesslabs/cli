@@ -84,7 +84,7 @@ func (fl *flag) init(clr color.Color, dontSetValue bool) error {
 			}
 		}
 	}
-	if !dontSetValue && fl.tag.dft != "" && dft != "" {
+	if !dontSetValue && fl.tag.dft != "" && dft != "" && !fl.tag.ignoreDft {
 		if fl.isPtr() || isDecoder || isEmpty(fl.value) {
 			return fl.setDefault(dft, clr)
 		}
