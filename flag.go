@@ -47,9 +47,6 @@ func newFlag(field reflect.StructField, value reflect.Value, tag *tagProperty, c
 		return nil, fmt.Errorf("field %s can not set", clr.Bold(fl.field.Name))
 	}
 	fl.tag = *tag
-	if fl.isPtr() && fl.value.IsNil() {
-		fl.value.Set(reflect.New(fl.field.Type.Elem()))
-	}
 	isSliceDecoder := fl.value.Type().Implements(reflect.TypeOf((*SliceDecoder)(nil)).Elem())
 	if !isSliceDecoder && fl.value.CanAddr() {
 		isSliceDecoder = fl.value.Addr().Type().Implements(reflect.TypeOf((*SliceDecoder)(nil)).Elem())
@@ -318,21 +315,7 @@ func tryGetDecoder(kind reflect.Kind, val reflect.Value) Decoder {
 	return nil
 }
 
-func setWithProperType(fl *flag, typ reflect.Type, val reflect.Value, s string, clr color.Color, isSubField bool) error {
-	kind := typ.Kind()
-
-	// try parser first of all
-	if fl.tag.parserCreator != nil && val.CanInterface() {
-		if kind != reflect.Ptr && val.CanAddr() {
-			val = val.Addr()
-		}
-		return fl.tag.parserCreator(val.Interface()).Parse(s)
-	}
-
-	if decoder := tryGetDecoder(kind, val); decoder != nil {
-		return decoder.Decode(s)
-	}
-
+func decode(s string, isSubField bool, kind reflect.Kind, val reflect.Value, typ reflect.Type, fl *flag, clr color.Color) error {
 	switch kind {
 	case reflect.Bool:
 		if v, err := getBool(s, clr); err == nil {
@@ -420,11 +403,41 @@ func setWithProperType(fl *flag, typ reflect.Type, val reflect.Value, s string, 
 			return err
 		}
 		val.SetMapIndex(k.Elem(), v.Elem())
-
 	default:
 		return fmt.Errorf("unsupported type: %s", kind.String())
 	}
 	return nil
+}
+
+func setWithProperType(fl *flag, typ reflect.Type, val reflect.Value, s string, clr color.Color, isSubField bool) error {
+	kind := typ.Kind()
+
+	// try parser first of all
+	if fl.tag.parserCreator != nil && val.CanInterface() {
+		if kind != reflect.Ptr && val.CanAddr() {
+			val = val.Addr()
+		}
+		return fl.tag.parserCreator(val.Interface()).Parse(s)
+	}
+
+	if decoder := tryGetDecoder(kind, val); decoder != nil {
+		return decoder.Decode(s)
+	}
+
+	switch kind {
+	case reflect.Bool, reflect.String, reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
+		reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Float32, reflect.Float64,
+		reflect.Slice, reflect.Map:
+		return decode(s, isSubField, kind, val, typ, fl, clr)
+	case reflect.Pointer:
+		if s == "" {
+			return nil
+		}
+		val.Set(reflect.New(fl.field.Type.Elem()))
+		ptrValue := val.Elem()
+		return decode(s, isSubField, ptrValue.Kind(), ptrValue, typ, fl, clr)
+	}
+	return fmt.Errorf("unsupported type: %s", kind.String())
 }
 
 func splitKeyVal(s, sep string) (key, val string, err error) {
