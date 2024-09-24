@@ -62,6 +62,7 @@ type argT struct {
 	PtrStr  *string `cli:"ptrStr"`
 
 	RequiredNotEnforced string `cli:"*requiredNotEnforced" ignoreRequired:"true"`
+	Hidden              string `cli:"hidden" hidden:"true"`
 }
 
 func toStr(i interface{}) string {
@@ -362,6 +363,10 @@ func TestParse(t *testing.T) {
 		{
 			args: []string{"--required=0", "--requiredNotEnforced=hikikomori"},
 			want: argT{Default: 102, RequiredNotEnforced: "hikikomori"},
+		},
+		{
+			args: []string{"--required=0", "--hidden=hide_me"},
+			want: argT{Default: 102, Hidden: "hide_me"},
 		},
 	} {
 		if tab.args == nil {
