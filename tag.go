@@ -103,11 +103,21 @@ func parseTag(fieldName string, structTag reflect.StructTag) (p *tagProperty, is
 	p.dft = tag.Get(tagDefaut)
 
 	// `ignoreDft` TAG
-	dftToIgnore, _ := strconv.ParseBool(tag.Get(tagIgnoreDefault))
-	p.ignoreDft = dftToIgnore
+	if tag := tag.Get(tagIgnoreDefault); tag != "" {
+		p.ignoreDft, err = strconv.ParseBool(tag)
 
-	requiredToIgnore, _ := strconv.ParseBool(tag.Get(tagIgnoreRequired))
-	p.ignoreRequired = requiredToIgnore
+	}
+	if err != nil {
+		return
+	}
+
+	// `ignoreRequired` TAG
+	if tag := tag.Get(tagIgnoreRequired); tag != "" {
+		p.ignoreRequired, err = strconv.ParseBool(tag)
+	}
+	if err != nil {
+		return
+	}
 
 	// `name` TAG
 	p.name = tag.Get(tagName)
