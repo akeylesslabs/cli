@@ -11,13 +11,14 @@ const (
 	tagPw   = "pw" // password
 	tagEdit = "edit"
 
-	tagUsage        = "usage"
-	tagDefaut       = "dft"
-	tagDefautInject = "ignoreDft"
-	tagName         = "name"
-	tagPrompt       = "prompt"
-	tagParser       = "parser"
-	tagSep          = "sep" // used to seperate key/value pair of map, default is `=`
+	tagUsage          = "usage"
+	tagDefaut         = "dft"
+	tagIgnoreDefault  = "ignoreDft"
+	tagIgnoreRequired = "ignoreRequired"
+	tagName           = "name"
+	tagPrompt         = "prompt"
+	tagParser         = "parser"
+	tagSep            = "sep" // used to seperate key/value pair of map, default is `=`
 
 	dashOne = "-"
 	dashTwo = "--"
@@ -41,13 +42,14 @@ type tagProperty struct {
 	isEdit   bool   `edit:"xxx"`
 	editFile string `edit:"FILE:xxx"`
 
-	usage         string            `usage:"usage string"`
-	dft           string            `dft:"default value or expression"`
-	ignoreDft     bool              `ignoreDft:"true/false, by default true"`
-	name          string            `name:"tag reference name"`
-	prompt        string            `prompt:"prompt string"`
-	sep           string            `sep:"string for seperate kay/value pair of map"`
-	parserCreator FlagParserCreator `parser:"parser for flag"`
+	usage          string            `usage:"usage string"`
+	dft            string            `dft:"default value or expression"`
+	ignoreDft      bool              `ignoreDft:"true/false, by default false"`
+	ignoreRequired bool              `ignoreRequired:"true/false, by default false"`
+	name           string            `name:"tag reference name"`
+	prompt         string            `prompt:"prompt string"`
+	sep            string            `sep:"string for seperate kay/value pair of map"`
+	parserCreator  FlagParserCreator `parser:"parser for flag"`
 
 	// flag names
 	shortNames []string
@@ -101,8 +103,21 @@ func parseTag(fieldName string, structTag reflect.StructTag) (p *tagProperty, is
 	p.dft = tag.Get(tagDefaut)
 
 	// `ignoreDft` TAG
-	toIgnore, _ := strconv.ParseBool(tag.Get(tagDefautInject))
-	p.ignoreDft = toIgnore
+	if tag := tag.Get(tagIgnoreDefault); tag != "" {
+		p.ignoreDft, err = strconv.ParseBool(tag)
+
+	}
+	if err != nil {
+		return
+	}
+
+	// `ignoreRequired` TAG
+	if tag := tag.Get(tagIgnoreRequired); tag != "" {
+		p.ignoreRequired, err = strconv.ParseBool(tag)
+	}
+	if err != nil {
+		return
+	}
 
 	// `name` TAG
 	p.name = tag.Get(tagName)

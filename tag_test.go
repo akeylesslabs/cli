@@ -23,7 +23,9 @@ func TestTag(t *testing.T) {
 						dft:"dft-value"`
 		StillPrintsDft string `cli:"stillDft"  usage:"multi usage" dft:"dft-value" ignoreDft:"false"`
 
-		Required     string `cli:"*r"`
+		Required            string `cli:"*r"`
+		RequiredNotEnforced string `cli:"*re" ignoreRequired:"true"`
+
 		Force        string `cli:"!f"`
 		EditFile     string `edit:"Filename:file"`
 		ShortAndLong string `cli:"x,y,z,xy,yz,xyz"`
@@ -110,7 +112,7 @@ func TestTag(t *testing.T) {
 			assert.False(t, tag.isEdit)
 			assert.Equal(t, tag.longNames, []string{"--sep"})
 			assert.Equal(t, tag.sep, ":")
-		case "Required":
+		case "Required", "RequiredNotEnforced":
 			assert.True(t, tag.isRequired)
 			assert.False(t, tag.isForce)
 			assert.False(t, tag.isPassword)

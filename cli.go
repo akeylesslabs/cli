@@ -296,7 +296,7 @@ func parseArgsToFlagSet(args []string, flagSet *flagSet, clr color.Color) {
 
 	buff := bytes.NewBufferString("")
 	for _, fl := range flagSet.flagSlice {
-		if !fl.isAssigned && fl.tag.isRequired {
+		if !fl.isAssigned && fl.tag.isRequired && !fl.tag.ignoreRequired {
 			if buff.Len() > 0 {
 				buff.WriteByte('\n')
 			}
