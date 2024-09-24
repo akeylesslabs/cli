@@ -410,7 +410,7 @@ func (cmd *Command) defaultUsageFn(ctx *Context) string {
 	if !isEmpty {
 		fmt.Fprintf(buff, "%s:\n\n%s", clr.Bold("Options"), usage(argvList, clr, style))
 	}
-	if cmd.children != nil && len(cmd.children) > 0 {
+	if len(cmd.children) > 0 {
 		if !isEmpty {
 			buff.WriteByte('\n')
 		}

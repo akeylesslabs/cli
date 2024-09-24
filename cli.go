@@ -155,6 +155,10 @@ func initFlagSet(typ reflect.Type, val reflect.Value, flagSet *flagSet, clr colo
 		if fl == nil {
 			continue
 		}
+		// hidden flag shouldn't appear in usage menu (--help)
+		if dontSetValue && fl.tag.hidden {
+			continue
+		}
 		flagSet.flagSlice = append(flagSet.flagSlice, fl)
 
 		// encode flag value

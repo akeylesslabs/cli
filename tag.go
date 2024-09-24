@@ -19,6 +19,7 @@ const (
 	tagPrompt         = "prompt"
 	tagParser         = "parser"
 	tagSep            = "sep" // used to seperate key/value pair of map, default is `=`
+	tagHidden         = "hidden"
 
 	dashOne = "-"
 	dashTwo = "--"
@@ -50,6 +51,7 @@ type tagProperty struct {
 	prompt         string            `prompt:"prompt string"`
 	sep            string            `sep:"string for seperate kay/value pair of map"`
 	parserCreator  FlagParserCreator `parser:"parser for flag"`
+	hidden         bool              `hidden:"hide from help menu"`
 
 	// flag names
 	shortNames []string
@@ -136,6 +138,13 @@ func parseTag(fieldName string, structTag reflect.StructTag) (p *tagProperty, is
 	p.sep = defaultSepForKeyValueOfMap
 	if sep := tag.Get(tagSep); sep != "" {
 		p.sep = sep
+	}
+
+	if hidden := tag.Get(tagHidden); hidden != "" {
+		p.hidden, err = strconv.ParseBool(hidden)
+	}
+	if err != nil {
+		return
 	}
 
 	cli = strings.TrimSpace(cli)
