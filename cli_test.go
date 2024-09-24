@@ -58,8 +58,10 @@ type argT struct {
 	Float32 float32 `cli:"f32" usage:"type float32"`
 	Float64 float64 `cli:"f64" usage:"type float64"`
 
-	PtrBool *bool `cli:"ptrBool"`
-	PtrStr *string `cli:"ptrStr"`
+	PtrBool *bool   `cli:"ptrBool"`
+	PtrStr  *string `cli:"ptrStr"`
+
+	RequiredNotEnforced *string `cli:"*requiredNotEnforced" ignoreRequired:"true"`
 }
 
 func toStr(i interface{}) string {
@@ -334,11 +336,11 @@ func TestParse(t *testing.T) {
 		// Case: bool pointer
 		{
 			args: []string{"--required=0", "--ptrBool=true"},
-			want: argT{Default: 102, PtrBool: func(b bool)*bool{return &b}(true)},
+			want: argT{Default: 102, PtrBool: func(b bool) *bool { return &b }(true)},
 		},
 		{
 			args: []string{"--required=0", "--ptrBool=false"},
-			want: argT{Default: 102, PtrBool: func(b bool)*bool{return &b}(false)},
+			want: argT{Default: 102, PtrBool: func(b bool) *bool { return &b }(false)},
 		},
 		{
 			args: []string{"--required=0"},
@@ -347,11 +349,11 @@ func TestParse(t *testing.T) {
 		// Case: str pointer
 		{
 			args: []string{"--required=0", "--ptrStr=true"},
-			want: argT{Default: 102, PtrStr: func(b string)*string{return &b}("true")},
+			want: argT{Default: 102, PtrStr: func(b string) *string { return &b }("true")},
 		},
 		{
 			args: []string{"--required=0", "--ptrStr=false"},
-			want: argT{Default: 102, PtrStr: func(b string)*string{return &b}("false")},
+			want: argT{Default: 102, PtrStr: func(b string) *string { return &b }("false")},
 		},
 		{
 			args: []string{"--required=0"},
