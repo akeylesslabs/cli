@@ -26,6 +26,8 @@ func TestTag(t *testing.T) {
 		Required            string `cli:"*r"`
 		RequiredNotEnforced string `cli:"*re" ignoreRequired:"true"`
 
+		Hidden string `cli:"hide-me" hidden:"true"`
+
 		Force        string `cli:"!f"`
 		EditFile     string `edit:"Filename:file"`
 		ShortAndLong string `cli:"x,y,z,xy,yz,xyz"`
@@ -57,24 +59,28 @@ func TestTag(t *testing.T) {
 			assert.False(t, tag.isForce)
 			assert.False(t, tag.isPassword)
 			assert.False(t, tag.isEdit)
+			assert.False(t, tag.hidden)
 			assert.Equal(t, tag.longNames, []string{"--cli"})
 		case "Pw":
 			assert.False(t, tag.isRequired)
 			assert.False(t, tag.isForce)
 			assert.True(t, tag.isPassword)
 			assert.False(t, tag.isEdit)
+			assert.False(t, tag.hidden)
 			assert.Equal(t, tag.longNames, []string{"--pw"})
 		case "Edit":
 			assert.False(t, tag.isRequired)
 			assert.False(t, tag.isForce)
 			assert.False(t, tag.isPassword)
 			assert.True(t, tag.isEdit)
+			assert.False(t, tag.hidden)
 			assert.Equal(t, tag.longNames, []string{"--edit"})
 		case "Usage":
 			assert.False(t, tag.isRequired)
 			assert.False(t, tag.isForce)
 			assert.False(t, tag.isPassword)
 			assert.False(t, tag.isEdit)
+			assert.False(t, tag.hidden)
 			assert.Equal(t, tag.longNames, []string{"--usage"})
 			assert.Equal(t, tag.usage, "hello,usage")
 		case "Dft":
@@ -82,6 +88,7 @@ func TestTag(t *testing.T) {
 			assert.False(t, tag.isForce)
 			assert.False(t, tag.isPassword)
 			assert.False(t, tag.isEdit)
+			assert.False(t, tag.hidden)
 			assert.Equal(t, tag.longNames, []string{"--dft"})
 			assert.Equal(t, tag.dft, "hello,dft")
 		case "Name":
@@ -89,6 +96,7 @@ func TestTag(t *testing.T) {
 			assert.False(t, tag.isForce)
 			assert.False(t, tag.isPassword)
 			assert.False(t, tag.isEdit)
+			assert.False(t, tag.hidden)
 			assert.Equal(t, tag.longNames, []string{"--name"})
 			assert.Equal(t, tag.name, "hello-name")
 		case "Prompt":
@@ -96,6 +104,7 @@ func TestTag(t *testing.T) {
 			assert.False(t, tag.isForce)
 			assert.False(t, tag.isPassword)
 			assert.False(t, tag.isEdit)
+			assert.False(t, tag.hidden)
 			assert.Equal(t, tag.longNames, []string{"--prompt"})
 			assert.Equal(t, tag.prompt, "hello,prompt")
 		case "Parser":
@@ -103,6 +112,7 @@ func TestTag(t *testing.T) {
 			assert.False(t, tag.isForce)
 			assert.False(t, tag.isPassword)
 			assert.False(t, tag.isEdit)
+			assert.False(t, tag.hidden)
 			assert.Equal(t, tag.longNames, []string{"--parser"})
 			assert.Equal(t, typField.Tag.Get(tagParser), "json")
 		case "Sep":
@@ -110,6 +120,7 @@ func TestTag(t *testing.T) {
 			assert.False(t, tag.isForce)
 			assert.False(t, tag.isPassword)
 			assert.False(t, tag.isEdit)
+			assert.False(t, tag.hidden)
 			assert.Equal(t, tag.longNames, []string{"--sep"})
 			assert.Equal(t, tag.sep, ":")
 		case "Required", "RequiredNotEnforced":
@@ -117,22 +128,32 @@ func TestTag(t *testing.T) {
 			assert.False(t, tag.isForce)
 			assert.False(t, tag.isPassword)
 			assert.False(t, tag.isEdit)
+			assert.False(t, tag.hidden)
+		case "Hidden":
+			assert.False(t, tag.isRequired)
+			assert.False(t, tag.isForce)
+			assert.False(t, tag.isPassword)
+			assert.False(t, tag.isEdit)
+			assert.True(t, tag.hidden)
 		case "Force":
 			assert.False(t, tag.isRequired)
 			assert.True(t, tag.isForce)
 			assert.False(t, tag.isPassword)
 			assert.False(t, tag.isEdit)
+			assert.False(t, tag.hidden)
 		case "EditFile":
 			assert.False(t, tag.isRequired)
 			assert.False(t, tag.isForce)
 			assert.False(t, tag.isPassword)
 			assert.True(t, tag.isEdit)
+			assert.False(t, tag.hidden)
 			assert.Equal(t, tag.editFile, "Filename")
 		case "ShortAndLong":
 			assert.False(t, tag.isRequired)
 			assert.False(t, tag.isForce)
 			assert.False(t, tag.isPassword)
 			assert.False(t, tag.isEdit)
+			assert.False(t, tag.hidden)
 			assert.Equal(t, tag.shortNames, []string{"-x", "-y", "-z"})
 			assert.Equal(t, tag.longNames, []string{"--xy", "--yz", "--xyz"})
 		case "Multi", "StillPrintsDft":
