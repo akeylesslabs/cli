@@ -155,8 +155,9 @@ func initFlagSet(typ reflect.Type, val reflect.Value, flagSet *flagSet, clr colo
 		if fl == nil {
 			continue
 		}
-		// hidden flag shouldn't appear in usage menu (--help)
-		if dontSetValue && fl.tag.hidden {
+		// hidden flag shouldn't appear in usage menu (--help).
+		// if env SHOW_HIDDEN_CLI_COMMANDS is set, hidden flags will be shown.
+		if dontSetValue && fl.tag.hidden && !revealHiddenParams() {
 			continue
 		}
 		flagSet.flagSlice = append(flagSet.flagSlice, fl)
@@ -376,4 +377,9 @@ func parseSiameseFlag(flagSet *flagSet, firstHalf, latterHalf string, clr color.
 		return fl, true
 	}
 	return nil, false
+}
+
+func revealHiddenParams() bool {
+	_, forceReveal := os.LookupEnv("SHOW_HIDDEN_CLI_COMMANDS")
+	return forceReveal
 }
