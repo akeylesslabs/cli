@@ -16,7 +16,7 @@ import (
 	"github.com/mattn/go-colorable"
 )
 
-var commandNameRegexp = regexp.MustCompile("^[a-zA-Z_0-9][a-zA-Z_\\-0-9]*$")
+var commandNameRegexp = regexp.MustCompile(`^[a-zA-Z_0-9][a-zA-Z_\-0-9]*$`)
 
 // IsValidCommandName validates name of command
 func IsValidCommandName(commandName string) bool {
@@ -147,7 +147,7 @@ func (cmd *Command) RegisterFunc(name string, fn CommandFunc, argvFn ArgvFunc) *
 func (cmd *Command) RegisterTree(forest ...*CommandTree) {
 	for _, tree := range forest {
 		cmd.Register(tree.command)
-		if tree.forest != nil && len(tree.forest) > 0 {
+		if len(tree.forest) > 0 {
 			tree.command.RegisterTree(tree.forest...)
 		}
 	}
@@ -280,7 +280,7 @@ func (cmd *Command) prepare(clr color.Color, args []string, writer io.Writer, re
 	if !child.CanSubRoute && end != len(router) {
 		suggestions := cmd.Suggestions(path)
 		buff := bytes.NewBufferString("")
-		if suggestions != nil && len(suggestions) > 0 {
+		if len(suggestions) > 0 {
 			if len(suggestions) == 1 {
 				fmt.Fprintf(buff, "\nDid you mean %s?", clr.Bold(suggestions[0]))
 			} else {
@@ -532,7 +532,7 @@ func (cmd *Command) ChildrenDescriptions(prefix, indent string) string {
 		}
 
 		aliases := ""
-		if child.Aliases != nil && len(child.Aliases) > 0 {
+		if len(child.Aliases) > 0 {
 			aliasesBuff := bytes.NewBufferString("(aliases ")
 			aliasesBuff.WriteString(strings.Join(child.Aliases, ","))
 			aliasesBuff.WriteString(")")
@@ -552,7 +552,7 @@ func (cmd *Command) ChildrenDescriptions(prefix, indent string) string {
 }
 
 func (cmd *Command) nochild() bool {
-	return cmd.children == nil || len(cmd.children) == 0
+	return len(cmd.children) == 0
 }
 
 // Suggestions returns all similar commands

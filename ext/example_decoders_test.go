@@ -1,7 +1,6 @@
 package ext_test
 
 import (
-	"io/ioutil"
 	"os"
 	"time"
 
@@ -55,7 +54,7 @@ func ExampleFile() {
 		Data ext.File `cli:"f"`
 	}
 	filename := "test.txt"
-	ioutil.WriteFile(filename, []byte("hello, File decoder"), 0644)
+	os.WriteFile(filename, []byte("hello, File decoder"), 0644)
 	defer os.Remove(filename)
 
 	args := []string{"app", "-f", filename}

@@ -3,6 +3,7 @@ package cli
 import (
 	"bufio"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -32,7 +33,7 @@ func HelpCommandFn(ctx *Context) error {
 		parent = ctx.Command().Parent()
 	)
 	if len(args) == 0 {
-		ctx.String(parent.Usage(ctx))
+		ctx.String("%s", parent.Usage(ctx))
 		return nil
 	}
 	var (
@@ -42,7 +43,7 @@ func HelpCommandFn(ctx *Context) error {
 	if child == nil {
 		return fmt.Errorf("command %s not found", clr.Yellow(strings.Join(args, " ")))
 	}
-	ctx.String(child.Usage(ctx))
+	ctx.String("%s", child.Usage(ctx))
 	return nil
 }
 
@@ -74,12 +75,12 @@ func Daemon(ctx *Context, successPrefix string) error {
 	}
 
 	if strings.HasPrefix(line, successPrefix) {
-		ctx.String(line)
+		ctx.String("%s", line)
 		cmd.Process.Release()
 	} else {
 		cmd.Process.Kill()
 		line = strings.TrimSuffix(line, "\n")
-		return fmt.Errorf(line)
+		return errors.New(line)
 	}
 	return nil
 }

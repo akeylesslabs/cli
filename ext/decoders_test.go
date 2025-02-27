@@ -2,7 +2,7 @@ package ext
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"os"
 	"testing"
 	"time"
@@ -56,7 +56,7 @@ func TestFile(t *testing.T) {
 	}
 	filename := "yXLLBhNHkv9VdAarIF87"
 	content := "hello,world"
-	require.Nil(t, ioutil.WriteFile(filename, []byte(content), 0644))
+	require.Nil(t, os.WriteFile(filename, []byte(content), 0644))
 	defer os.Remove(filename)
 	argv := new(argT)
 	assert.Nil(t, cli.Parse([]string{"-f", filename}, argv))
@@ -71,11 +71,11 @@ func TestReader(t *testing.T) {
 	// read from file
 	filename := "yXLLBhNHkv9VdAarIF87"
 	content := "hello,world"
-	require.Nil(t, ioutil.WriteFile(filename, []byte(content), 0644))
+	require.Nil(t, os.WriteFile(filename, []byte(content), 0644))
 	defer os.Remove(filename)
 	argv := new(argT)
 	assert.Nil(t, cli.Parse([]string{"-r", filename}, argv))
-	data, err := ioutil.ReadAll(argv.Reader)
+	data, err := io.ReadAll(argv.Reader)
 	require.Nil(t, err)
 	assert.Equal(t, string(data), content)
 	assert.Nil(t, argv.Reader.Close())
@@ -84,7 +84,7 @@ func TestReader(t *testing.T) {
 	content = "dlrow,olleh"
 	r := bytes.NewBufferString(content)
 	argv.Reader.SetReader(r)
-	data, err = ioutil.ReadAll(argv.Reader)
+	data, err = io.ReadAll(argv.Reader)
 	require.Nil(t, err)
 	assert.Equal(t, string(data), content)
 	assert.Nil(t, argv.Reader.Close())
@@ -104,7 +104,7 @@ func TestWriter(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, n, len(content))
 	assert.Nil(t, argv.Writer.Close())
-	data, err := ioutil.ReadFile(filename)
+	data, err := os.ReadFile(filename)
 	require.Nil(t, err)
 	assert.Equal(t, string(data), content)
 

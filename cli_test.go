@@ -427,7 +427,7 @@ func TestParse(t *testing.T) {
 	}
 	envV := new(envT)
 	if flagSet := parseArgv([]string{}, envV, clr); flagSet.err != nil {
-		t.Errorf(flagSet.err.Error())
+		t.Error(flagSet.err.Error())
 	} else {
 		if want := os.Getenv("ENV_CLI_TEST"); want != envV.DefaultEnv {
 			t.Errorf("ENV_CLI_TEST want `%s`, got `%s`", want, envV.DefaultEnv)

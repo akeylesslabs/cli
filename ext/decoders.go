@@ -4,7 +4,6 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
@@ -129,9 +128,9 @@ func (f *File) Decode(s string) error {
 		err  error
 	)
 	if s == "" {
-		data, err = ioutil.ReadAll(os.Stdin)
+		data, err = io.ReadAll(os.Stdin)
 	} else {
-		data, err = ioutil.ReadFile(s)
+		data, err = os.ReadFile(s)
 	}
 	if err != nil {
 		return err

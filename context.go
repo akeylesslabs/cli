@@ -103,7 +103,7 @@ func (ctx *Context) NOpt() int {
 
 // Argv returns parsed args object
 func (ctx *Context) Argv() interface{} {
-	if ctx.argvList == nil || len(ctx.argvList) == 0 {
+	if len(ctx.argvList) == 0 {
 		return nil
 	}
 	return ctx.argvList[0]
@@ -201,7 +201,7 @@ func (ctx *Context) Usage() string {
 
 // WriteUsage writes usage to writer
 func (ctx *Context) WriteUsage() {
-	ctx.String(ctx.Usage())
+	ctx.String("%s", ctx.Usage())
 }
 
 // Writer returns writer
