@@ -3,7 +3,7 @@ package ext
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"text/template"
@@ -45,7 +45,7 @@ func InstallBashCompletion(root *cli.Command) error {
 	if dstFile == nil {
 		return fmt.Errorf("no destination bash file")
 	}
-	data, err := ioutil.ReadAll(dstFile)
+	data, err := io.ReadAll(dstFile)
 	if err != nil {
 		return err
 	}

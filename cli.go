@@ -2,6 +2,7 @@ package cli
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"os"
 	"reflect"
@@ -309,7 +310,7 @@ func parseArgsToFlagSet(args []string, flagSet *flagSet, clr color.Color) {
 		}
 	}
 	if buff.Len() > 0 && !flagSet.hasForce {
-		flagSet.err = fmt.Errorf(buff.String())
+		flagSet.err = errors.New(buff.String())
 	}
 }
 

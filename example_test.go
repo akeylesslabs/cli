@@ -2,7 +2,6 @@ package cli_test
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"reflect"
 
@@ -475,7 +474,7 @@ func ExampleFlagParser() {
 		`--cfg1`, `{"A": "hello", "B": 2}`,
 		`--cfg2`, jsonfile,
 	}
-	ioutil.WriteFile(jsonfile, []byte(`{"C": "world", "D": true}`), 0644)
+	os.WriteFile(jsonfile, []byte(`{"C": "world", "D": true}`), 0644)
 	defer os.Remove(jsonfile)
 
 	cli.RunWithArgs(new(argT), args, func(ctx *cli.Context) error {

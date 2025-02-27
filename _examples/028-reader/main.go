@@ -1,7 +1,7 @@
 package main
 
 import (
-	"io/ioutil"
+	"io"
 	"os"
 	"strings"
 
@@ -16,7 +16,7 @@ type argT struct {
 func main() {
 	os.Exit(cli.Run(new(argT), func(ctx *cli.Context) error {
 		argv := ctx.Argv().(*argT)
-		data, err := ioutil.ReadAll(argv.Reader)
+		data, err := io.ReadAll(argv.Reader)
 		argv.Reader.Close()
 		if err != nil {
 			return err
@@ -26,7 +26,7 @@ func main() {
 
 		// Replace the reader
 		argv.Reader.SetReader(strings.NewReader("string reader"))
-		data, err = ioutil.ReadAll(argv.Reader)
+		data, err = io.ReadAll(argv.Reader)
 		if err != nil {
 			return err
 		}

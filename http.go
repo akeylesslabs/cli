@@ -61,9 +61,8 @@ func (cmd *Command) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	router := strings.Split(path, "/")
 	args := make([]string, 0, len(r.Form)*2+len(router))
-	for _, r := range router {
-		args = append(args, r)
-	}
+	args = append(args, router...)
+
 	for key, values := range r.Form {
 		if len(key) == 0 || len(values) == 0 {
 			continue
@@ -128,7 +127,7 @@ func (cmd *Command) Serve(listeners ...net.Listener) (err error) {
 func (cmd *Command) RPC(httpc *http.Client, ctx *Context) error {
 	addr := "http://rpc/" + ctx.Command().pathWithSep("/")
 	method := "POST"
-	if cmd.HTTPMethods != nil && len(cmd.HTTPMethods) > 0 {
+	if len(cmd.HTTPMethods) > 0 {
 		method = cmd.HTTPMethods[0]
 	}
 	var body io.Reader

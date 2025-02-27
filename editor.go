@@ -3,7 +3,6 @@ package cli
 import (
 	"crypto/rand"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 )
@@ -45,7 +44,7 @@ func launchEditorWithFilename(editor, filename string) (content []byte, err erro
 			return
 		}
 	}
-	content, err = ioutil.ReadFile(filename)
+	content, err = os.ReadFile(filename)
 	if err != nil {
 		return []byte{}, nil
 	}
