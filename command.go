@@ -531,15 +531,7 @@ func (cmd *Command) ChildrenDescriptions(prefix, indent string) string {
 			continue
 		}
 
-		aliases := ""
-		if len(child.Aliases) > 0 {
-			aliasesBuff := bytes.NewBufferString("(aliases ")
-			aliasesBuff.WriteString(strings.Join(child.Aliases, ","))
-			aliasesBuff.WriteString(")")
-			aliases = aliasesBuff.String()
-		}
-
-		childStr := fmt.Sprintf(format, child.Name, child.Desc, aliases)
+		childStr := fmt.Sprintf(format, child.Name, child.Desc)
 		childrenList = append(childrenList, childStr)
 	}
 
